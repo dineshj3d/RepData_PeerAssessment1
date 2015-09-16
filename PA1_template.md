@@ -96,36 +96,45 @@ activity <- read.csv("./data/activity.csv")
 
 ```r
 activity_by_day <- activity %>% select (date,steps) %>% 
-    ## filter(date == "2012-10-04") %>% 
-        group_by (date) %>% 
-            summarise(totalstepsperday= sum(steps))
+        filter(!is.na(steps)) %>% 
+             group_by (date) %>% 
+                summarise(totalstepsperday= sum(steps))
 
 summary (activity_by_day)
 ```
 
 ```
 ##          date    totalstepsperday
-##  2012-10-01: 1   Min.   :   41   
-##  2012-10-02: 1   1st Qu.: 8841   
-##  2012-10-03: 1   Median :10765   
-##  2012-10-04: 1   Mean   :10766   
-##  2012-10-05: 1   3rd Qu.:13294   
-##  2012-10-06: 1   Max.   :21194   
-##  (Other)   :55   NA's   :8
+##  2012-10-02: 1   Min.   :   41   
+##  2012-10-03: 1   1st Qu.: 8841   
+##  2012-10-04: 1   Median :10765   
+##  2012-10-05: 1   Mean   :10766   
+##  2012-10-06: 1   3rd Qu.:13294   
+##  2012-10-07: 1   Max.   :21194   
+##  (Other)   :47
 ```
 
 ```r
 hist(activity_by_day$totalstepsperday,
      breaks=seq(0,25000,by=2500),
          ylim=c(0,20),
-            col="lightgreen",
-                main="**Title**",
-                    xlab="**x-label**",
-                        ylab="**y-label**",
+            col="blue",
+                main="Histogram of daily steps",
+                    xlab="Steps",
+                        ylab="Frequency",
                             border="red")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
+```r
+# g <- ggplot(activity_by_day,aes(x = totalstepsperday)) +
+#   ggtitle("Histogram of daily steps") +
+#   xlab("Steps (binwidth 2000)") +
+#   scale_fill_brewer() +
+#   geom_histogram(binwidth = 1000,fill="#3399FF",colour="black")
+#g
+```
 
 
 ## STEP 2 - What is the average daily activity pattern?
@@ -133,6 +142,36 @@ plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintex
 plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
 
 
+```r
+activity_daily <- activity %>% select (interval,steps) %>% 
+        filter(!is.na(steps)) %>% 
+             group_by (interval) %>% 
+                summarise(meandailysteps= mean(steps))
+
+summary (activity_daily)
+```
+
+```
+##     interval      meandailysteps   
+##  Min.   :   0.0   Min.   :  0.000  
+##  1st Qu.: 588.8   1st Qu.:  2.486  
+##  Median :1177.5   Median : 34.113  
+##  Mean   :1177.5   Mean   : 37.383  
+##  3rd Qu.:1766.2   3rd Qu.: 52.835  
+##  Max.   :2355.0   Max.   :206.170
+```
+
+```r
+p <- ggplot(activity_daily, aes(x=interval, y=meandailysteps))
+p + geom_line()
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
+# calculate which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+maxstepsinterval <- activity_daily %>% slice(which.max(meandailysteps))
+```
 
 
 ## Imputing missing values
@@ -141,6 +180,14 @@ plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintex
 plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
 
 
+```r
+# add mean daily interval column to activity df, then replace NA's with this value
+activity <- merge(activity,activity_daily,by="interval")
+# round to nearest whole number
+activity$meandailysteps <- round(activity$meandailysteps, digits = 0)
+# replace NA's with mean of daily interval
+activity$steps <- ifelse(is.na(activity$steps),activity$meandailysteps,activity$steps)
+```
 
 
 
