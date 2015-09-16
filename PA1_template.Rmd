@@ -142,3 +142,27 @@ hist(activity.noNAs_by_day$totalstepsperday,
 plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
 plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
 plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
+```{r}
+
+# convert date 
+activity.noNAs$date <- as.Date(activity.noNAs$date, format = "%Y-%m-%d")
+# determine day of week
+activity.noNAs$dayofweek <- weekdays(activity.noNAs$date)
+# determine weekday or weekend
+activity.noNAs <- activity.noNAs %>% mutate(day = ifelse((dayofweek == "Sunday") | (dayofweek == "Saturday") ,"weekend","weekday"))
+
+activity.noNAs$day <- as.factor(activity.noNAs$day)
+
+activity.noNAs_daily <- activity.noNAs %>% select (interval,steps,day) %>% 
+        filter(!is.na(steps)) %>% 
+             group_by (interval,day) %>% 
+                summarise(meandailysteps= mean(steps))
+
+ggplot(activity.noNAs_daily,aes(interval,meandailysteps)) +
+        ggtitle("Time Series Plot of Average Steps by Interval (with imputed values)") +
+            facet_grid(. ~ day) +
+            ylab("steps") +
+                 geom_line(size = 0.5, color="blue")
+
+```
+
