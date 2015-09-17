@@ -1,7 +1,7 @@
 # Reproducible Research: Peer Assessment 1
 
 
-### STEP 1 - Loading and preprocessing the data
+#### STEP 1 - Loading and preprocessing the data
 
 Prepare the environment, making sure required packages are loaded, working directory set, check and document session & enviroment is documented. Then download, unzip and read the data into a data frame.
 
@@ -83,7 +83,7 @@ filepaths <- unzip(zipFile,exdir = "./data")
 activity <- read.csv("./data/activity.csv")
 ```
 
-## What is mean total number of steps taken per day?
+#### Step 2 - What is mean total number of steps taken per day?
 
 Create a new summary data frame of total number of steps taken each day. Create a histogram of steps taken each day. Use this data frame to calculate the mean and median.
 
@@ -125,7 +125,7 @@ median(activity_by_day$totalstepsperday , na.rm = TRUE)
 ```
 
 
-### STEP 2 - What is the average daily activity pattern?
+#### STEP 3 - What is the average daily activity pattern?
 Create a new summary data frame of mean number of steps taken each day. Create a histogram of steps taken each day. What is the average daily activity pattern
 
 
@@ -160,7 +160,7 @@ maxstepsinterval <- activity_daily %>% slice(which.max(meandailysteps))
 ```
 
 
-### Step 3 - Imputing missing values
+#### Step 4 - Imputing missing values
 To replace NA's use the mean of steps of each 5-minute interval. Create a new data frame which we have all NAs removed. This will be done by adding a new column of mean calculated previously using the 'interval' as key. Create histograms and calculate mean and median.
 
 
@@ -207,7 +207,7 @@ median(activity.noNAs_by_day$totalstepsperday , na.rm = TRUE)
 
 
 
-### STEP 4 -Are there differences in activity patterns between weekdays and weekends?
+#### STEP 5 -Are there differences in activity patterns between weekdays and weekends?
 To answer this question, first flag each observation as either a 'weekend' or 'weekday'. First compute the day of week when each  obeservation (row) was taken. A Saturday and Sunday observation is flagged as 'weekend', the rest 'weekday. Plot a separate time series graph for 'weekend' and 'weekday' 
 
 
