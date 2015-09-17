@@ -64,8 +64,6 @@ sessionInfo()
 ```
 
 ```r
-# set working directory
-setwd("~")
 # create folder where the zip will be dobwloaded
 if (!file.exists("data")) {
     dir.create("data")
