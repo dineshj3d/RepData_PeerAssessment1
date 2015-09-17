@@ -178,7 +178,7 @@ hist(activity.noNAs_by_day$totalstepsperday,
      breaks=seq(0,25000,by=2500),
          ylim=c(0,20),
             col="purple",
-                main="histogram of the total number of steps taken each day (w/o NAs)",
+                main="Histogram of the total number of steps taken each day (w/o NAs)",
                     xlab="Steps",
                         ylab="Frequency",
                             border="black")
@@ -187,7 +187,7 @@ hist(activity.noNAs_by_day$totalstepsperday,
 ![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
 
 ```r
-# calculate mean and medium 
+# calculate mean
 mean(activity.noNAs_by_day$totalstepsperday , na.rm = TRUE)
 ```
 
@@ -196,6 +196,7 @@ mean(activity.noNAs_by_day$totalstepsperday , na.rm = TRUE)
 ```
 
 ```r
+# calculate mediun 
 median(activity.noNAs_by_day$totalstepsperday , na.rm = TRUE)
 ```
 
@@ -205,7 +206,7 @@ median(activity.noNAs_by_day$totalstepsperday , na.rm = TRUE)
 
 
 
-#### STEP 5 -Are there differences in activity patterns between weekdays and weekends?
+#### STEP 5 - Are there differences in activity patterns between weekdays and weekends?
 To answer this question, first flag each observation as either a 'weekend' or 'weekday'. First compute the day of week when each  obeservation (row) was taken. A Saturday and Sunday observation is flagged as 'weekend', the rest 'weekday. Plot a separate time series graph for 'weekend' and 'weekday' 
 
 
