@@ -1,11 +1,9 @@
 # Reproducible Research: Peer Assessment 1
 
 
-## STEP 1 - Loading and preprocessing the data
+### STEP 1 - Loading and preprocessing the data
 
-plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
-plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
-plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
+Prepare the environment, making sure required packages are loaded, working directory set, check and document session & enviroment is documented. Then download, unzip and read the data into a data frame.
 
 
 ```r
@@ -35,11 +33,11 @@ pkgs.not.installed <- req.pkg[!sapply(req.pkg, function(p) require(p, character.
 
 ```r
 if (length(pkgs.not.installed)>0) install.packages(pkgs.not.installed, dependencies=TRUE)
-
+# load required packages
 library(ggplot2)
 library(dplyr)
 library(lubridate)
-
+# document session info for reference 
 sessionInfo()
 ```
 
@@ -68,78 +66,69 @@ sessionInfo()
 ```
 
 ```r
+# set working directory
 setwd("~")
-
+# create folder where the zip will be dobwloaded
 if (!file.exists("data")) {
     dir.create("data")
 }
-
-## download and unzip file to ./data folder
-
-## Download and load data
+## download and unzip file to if note already done
 sourceUrl <- "http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
 zipFile <- "./data/factivity.zip"  # file to be downloaded
-
 # only download if zip file has not been downloaded before
 if ( !file.exists(zipFile) ) {
     download.file(sourceUrl, zipFile)
 }
-
 # unzip the files (will do nothing if we previously did this)
 filepaths <- unzip(zipFile,exdir = "./data")
-
+# read data into data frame 
 activity <- read.csv("./data/activity.csv")
 ```
 
 ## What is mean total number of steps taken per day?
 
+Create a new summary data frame of total number of steps taken each day. Create a histogram of steps taken each day. Use this data frame to calculate the mean and median.
+
 
 ```r
+# create a new data frame of total number of steps taken each day
 activity_by_day <- activity %>% select (date,steps) %>% 
         filter(!is.na(steps)) %>% 
              group_by (date) %>% 
                 summarise(totalstepsperday= sum(steps))
-
-summary (activity_by_day)
-```
-
-```
-##          date    totalstepsperday
-##  2012-10-02: 1   Min.   :   41   
-##  2012-10-03: 1   1st Qu.: 8841   
-##  2012-10-04: 1   Median :10765   
-##  2012-10-05: 1   Mean   :10766   
-##  2012-10-06: 1   3rd Qu.:13294   
-##  2012-10-07: 1   Max.   :21194   
-##  (Other)   :47
-```
-
-```r
+# Make a histogram of the total number of steps taken each day
 hist(activity_by_day$totalstepsperday,
      breaks=seq(0,25000,by=2500),
          ylim=c(0,20),
-            col="blue",
-                main="Histogram of daily steps",
+            col="purple",
+                main="Histogram of total number of steps taken each day",
                     xlab="Steps",
                         ylab="Frequency",
-                            border="red")
+                            border="black")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
 
 ```r
-# g <- ggplot(activity_by_day,aes(x = totalstepsperday)) +
-#   ggtitle("Histogram of daily steps") +
-#   xlab("Steps (binwidth 2000)") +
-#   scale_fill_brewer() +
-#   geom_histogram(binwidth = 1000,fill="#3399FF",colour="black")
-#g
+# calculate mean and medium (ignore NAs)
+mean(activity_by_day$totalstepsperday , na.rm = TRUE)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
+median(activity_by_day$totalstepsperday , na.rm = TRUE)
+```
+
+```
+## [1] 10765
 ```
 
 
-## STEP 2 - What is the average daily activity pattern?
-plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
-plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
+### STEP 2 - What is the average daily activity pattern?
+Create a new summary data frame of mean number of steps taken each day. Create a histogram of steps taken each day. What is the average daily activity pattern
 
 
 ```r
@@ -147,7 +136,6 @@ activity_daily <- activity %>% select (interval,steps) %>%
         filter(!is.na(steps)) %>% 
              group_by (interval) %>% 
                 summarise(meandailysteps= mean(steps))
-
 summary (activity_daily)
 ```
 
@@ -163,7 +151,7 @@ summary (activity_daily)
 
 ```r
 p <- ggplot(activity_daily, aes(x=interval, y=meandailysteps))
-p + geom_line()
+p + geom_line(color="purple") 
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
@@ -174,10 +162,8 @@ maxstepsinterval <- activity_daily %>% slice(which.max(meandailysteps))
 ```
 
 
-## Imputing missing values
-To replace NA's we will use the mean of steps of each 5-minute interval.textplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
-plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
-plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
+### Step 3 - Imputing missing values
+To replace NA's use the mean of steps of each 5-minute interval. Create a new data frame which we have all NAs removed. This will be done by adding a new column of mean calculated previously using the 'interval' as key. Create histograms and calculate mean and median.
 
 
 ```r
@@ -187,68 +173,61 @@ activity.noNAs <- merge(activity,activity_daily,by="interval")
 activity.noNAs$meandailysteps <- round(activity.noNAs$meandailysteps, digits = 0)
 # replace NA's with mean of daily interval
 activity.noNAs$steps <- ifelse(is.na(activity.noNAs$steps),activity.noNAs$meandailysteps,activity.noNAs$steps)
-
 activity.noNAs$meandailysteps <- NULL # remove mean column, not needed
-
 activity.noNAs_by_day <- activity.noNAs %>% select (date,steps) %>% 
         filter(!is.na(steps)) %>% 
              group_by (date) %>% 
                 summarise(totalstepsperday= sum(steps))
-
-summary (activity.noNAs_by_day)
-```
-
-```
-##          date    totalstepsperday
-##  2012-10-01: 1   Min.   :   41   
-##  2012-10-02: 1   1st Qu.: 9819   
-##  2012-10-03: 1   Median :10762   
-##  2012-10-04: 1   Mean   :10766   
-##  2012-10-05: 1   3rd Qu.:12811   
-##  2012-10-06: 1   Max.   :21194   
-##  (Other)   :55
-```
-
-```r
 hist(activity.noNAs_by_day$totalstepsperday,
      breaks=seq(0,25000,by=2500),
          ylim=c(0,20),
-            col="blue",
-                main="Histogram of daily steps",
+            col="purple",
+                main="histogram of the total number of steps taken each day (w/o NAs)",
                     xlab="Steps",
                         ylab="Frequency",
-                            border="red")
+                            border="black")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
 
+```r
+# calculate mean and medium 
+mean(activity.noNAs_by_day$totalstepsperday , na.rm = TRUE)
+```
 
-
-## STEP 3 -Are there differences in activity patterns between weekdays and weekends?
-plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
-plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
-plaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintextplaintext
+```
+## [1] 10765.64
+```
 
 ```r
-# convert date 
-activity.noNAs$date <- as.Date(activity.noNAs$date, format = "%Y-%m-%d")
-# determine day of week
-activity.noNAs$dayofweek <- weekdays(activity.noNAs$date)
-# determine weekday or weekend
-activity.noNAs <- activity.noNAs %>% mutate(day = ifelse((dayofweek == "Sunday") | (dayofweek == "Saturday") ,"weekend","weekday"))
+median(activity.noNAs_by_day$totalstepsperday , na.rm = TRUE)
+```
 
+```
+## [1] 10762
+```
+
+
+
+### STEP 4 -Are there differences in activity patterns between weekdays and weekends?
+To answer this question, first flag each observation as either a 'weekend' or 'weekday'. First compute the day of week when each  obeservation (row) was taken. A Saturday and Sunday observation is flagged as 'weekend', the rest 'weekday. Plot a separate time series graph for 'weekend' and 'weekday' 
+
+
+```r
+# create a new factor variable with two levels – “weekday” and “weekend”
+activity.noNAs$date <- as.Date(activity.noNAs$date, format = "%Y-%m-%d") # convert date 
+activity.noNAs$dayofweek <- weekdays(activity.noNAs$date) # compute day of week
+activity.noNAs <- activity.noNAs %>% mutate(day = ifelse((dayofweek == "Sunday") | (dayofweek == "Saturday") ,"weekend","weekday")) # flag weekday or weekend
 activity.noNAs$day <- as.factor(activity.noNAs$day)
-
 activity.noNAs_daily <- activity.noNAs %>% select (interval,steps,day) %>% 
         filter(!is.na(steps)) %>% 
              group_by (interval,day) %>% 
                 summarise(meandailysteps= mean(steps))
-
 ggplot(activity.noNAs_daily,aes(interval,meandailysteps)) +
         ggtitle("Time Series Plot of Average Steps by Interval (with imputed values)") +
             facet_grid(. ~ day) +
             ylab("steps") +
-                 geom_line(size = 0.5, color="blue")
+                 geom_line(size = 0.5, color="purple")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
