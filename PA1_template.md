@@ -106,7 +106,7 @@ hist(activity_by_day$totalstepsperday,
 ![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
 
 ```r
-# calculate mean and medium (ignore NAs)
+# calculate mean (ignore NAs)
 mean(activity_by_day$totalstepsperday , na.rm = TRUE)
 ```
 
@@ -115,6 +115,7 @@ mean(activity_by_day$totalstepsperday , na.rm = TRUE)
 ```
 
 ```r
+# calculate mediun (ignore NAs)
 median(activity_by_day$totalstepsperday , na.rm = TRUE)
 ```
 
@@ -147,7 +148,8 @@ summary (activity_daily)
 
 ```r
 p <- ggplot(activity_daily, aes(x=interval, y=meandailysteps))
-p + geom_line(color="purple") 
+p + geom_line(color="purple") +
+    ggtitle("Time Series Plot - Average Steps by Interval")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
