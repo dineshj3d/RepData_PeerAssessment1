@@ -11,8 +11,6 @@ output:
 Prepare the environment, making sure required packages are loaded, working directory set, check and document session & enviroment is documented. Then download, unzip and read the data into a data frame.
 
 ```{r}
-# Always set working diractory to Home
-setwd("~")
 # Make sure needed packages loaded
 req.pkg <- c("ggplot2","dplyr","lubridate")
 pkgs.not.installed <- req.pkg[!sapply(req.pkg, function(p) require(p, character.only=T))]

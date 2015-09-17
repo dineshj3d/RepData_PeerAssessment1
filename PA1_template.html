@@ -67,9 +67,7 @@ img {
 <div id="step-1---loading-and-preprocessing-the-data" class="section level3">
 <h3>STEP 1 - Loading and preprocessing the data</h3>
 <p>Prepare the environment, making sure required packages are loaded, working directory set, check and document session &amp; enviroment is documented. Then download, unzip and read the data into a data frame.</p>
-<pre class="r"><code># Always set working diractory to Home
-setwd(&quot;~&quot;)
-# Make sure needed packages loaded
+<pre class="r"><code># Make sure needed packages loaded
 req.pkg &lt;- c(&quot;ggplot2&quot;,&quot;dplyr&quot;,&quot;lubridate&quot;)
 pkgs.not.installed &lt;- req.pkg[!sapply(req.pkg, function(p) require(p, character.only=T))]</code></pre>
 <pre><code>## Loading required package: ggplot2

@@ -7,8 +7,6 @@ Prepare the environment, making sure required packages are loaded, working direc
 
 
 ```r
-# Always set working diractory to Home
-setwd("~")
 # Make sure needed packages loaded
 req.pkg <- c("ggplot2","dplyr","lubridate")
 pkgs.not.installed <- req.pkg[!sapply(req.pkg, function(p) require(p, character.only=T))]
