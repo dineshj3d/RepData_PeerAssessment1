@@ -165,6 +165,7 @@ p + geom_line(color="purple") +
 maxstepsinterval <- activity_daily %>% slice(which.max(meandailysteps))
 ```
 
+835 is the 5-minute interval that on average across contains the maximum number of steps?
 
 #### Step 4 - Imputing missing values
 To replace NA's use the mean of steps of each 5-minute interval, create a new data frame.  Add a new column of mean calculated previously using the 'interval' as key. Replace each NA with the mean from the new column.
@@ -212,7 +213,7 @@ median(activity.noNAs_by_day$totalstepsperday , na.rm = TRUE)
 ## [1] 10762
 ```
 
-
+The revised mean and median (after imputing missing values) is 1.0765639\times 10^{4} and 1.0762\times 10^{4} respectively.
 
 #### STEP 5 - Are there differences in activity patterns between weekdays and weekends?
 To answer this question, flag each observation as either a 'weekend' or 'weekday'. Compute the day of week when each  obeservation (row) was taken. A Saturday and Sunday observation is flagged as 'weekend', the rest 'weekday. Plot a separate time series graph for 'weekend' and 'weekday' 
@@ -236,4 +237,4 @@ ggplot(activity.noNAs_daily,aes(interval,meandailysteps)) +
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
-
+There are some differences between weekend and weekday activity. On weekdays there is more between 5:00am and 10am, while on weekends it appears to switch towards mid-morning and afternoon. Before 5:00am there is VERY slightly more activity on weekends than on weekdays.
