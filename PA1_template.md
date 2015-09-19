@@ -3,7 +3,7 @@
 
 #### STEP 1 - Loading and preprocessing the data
 
-Prepare the environment, making sure required packages are loaded, working directory set, check and document session & enviroment is documented. Then download, unzip and read the data into a data frame.
+Prepare the environment, making sure required packages are loaded, working directory set, document session & enviroment. Then download, unzip and read the data into a data frame.
 
 
 ```r
@@ -64,11 +64,11 @@ sessionInfo()
 ```
 
 ```r
-# create folder where the zip will be dobwloaded
+# create folder where the zip will be downloaded
 if (!file.exists("data")) {
     dir.create("data")
 }
-## download and unzip file to if note already done
+## download and unzip file to if not already done
 sourceUrl <- "http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
 zipFile <- "./data/factivity.zip"  # file to be downloaded
 # only download if zip file has not been downloaded before
@@ -106,7 +106,7 @@ hist(activity_by_day$totalstepsperday,
 ![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
 
 ```r
-# calculate mean (ignore NAs)
+# Calculate and report the mean and median total number of steps taken per day
 mean(activity_by_day$totalstepsperday , na.rm = TRUE)
 ```
 
@@ -115,13 +115,19 @@ mean(activity_by_day$totalstepsperday , na.rm = TRUE)
 ```
 
 ```r
-# calculate mediun (ignore NAs)
 median(activity_by_day$totalstepsperday , na.rm = TRUE)
 ```
 
 ```
 ## [1] 10765
 ```
+
+```r
+s2mean <- mean(activity_by_day$totalstepsperday , na.rm = TRUE)
+s2median <- median(activity_by_day$totalstepsperday , na.rm = TRUE)
+```
+
+The mean and median are 1.0766189\times 10^{4} and 10765 respectively.
 
 
 #### STEP 3 - What is the average daily activity pattern?
@@ -161,7 +167,7 @@ maxstepsinterval <- activity_daily %>% slice(which.max(meandailysteps))
 
 
 #### Step 4 - Imputing missing values
-To replace NA's use the mean of steps of each 5-minute interval. Create a new data frame which we have all NAs removed. This will be done by adding a new column of mean calculated previously using the 'interval' as key. Create histograms and calculate mean and median.
+To replace NA's use the mean of steps of each 5-minute interval, create a new data frame.  Add a new column of mean calculated previously using the 'interval' as key. Replace each NA with the mean from the new column.
 
 
 ```r
@@ -209,7 +215,7 @@ median(activity.noNAs_by_day$totalstepsperday , na.rm = TRUE)
 
 
 #### STEP 5 - Are there differences in activity patterns between weekdays and weekends?
-To answer this question, first flag each observation as either a 'weekend' or 'weekday'. First compute the day of week when each  obeservation (row) was taken. A Saturday and Sunday observation is flagged as 'weekend', the rest 'weekday. Plot a separate time series graph for 'weekend' and 'weekday' 
+To answer this question, flag each observation as either a 'weekend' or 'weekday'. Compute the day of week when each  obeservation (row) was taken. A Saturday and Sunday observation is flagged as 'weekend', the rest 'weekday. Plot a separate time series graph for 'weekend' and 'weekday' 
 
 
 ```r
